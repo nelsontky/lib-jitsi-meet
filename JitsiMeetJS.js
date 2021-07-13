@@ -430,6 +430,38 @@ export default _mergeNamespaceAndModule({
             });
     },
 
+    createGenericLocalTrack(mediaStream, type) {
+      const jitsiLocalTracks = RTC.createLocalTracks(
+        [
+            {
+                deviceId: null,
+                mediaType: type,
+                sourceType: type,
+                stream: mediaStream,
+                track: mediaStream.getVideoTracks()[0],
+                videoType: type
+            }
+        ]);
+        
+      return jitsiLocalTracks[0];
+    },
+
+    createGenericAudioLocalTrack(mediaStream) {
+      const jitsiLocalTracks = RTC.createLocalTracks(
+        [
+            {
+                deviceId: null,
+                mediaType: "audio",
+                sourceType: "audio",
+                stream: mediaStream,
+                track: mediaStream.getAudioTracks()[0],
+                videoType: "audio"
+            }
+        ]);
+        
+      return jitsiLocalTracks[0];
+    },
+
     /**
      * Create a TrackVADEmitter service that connects an audio track to an VAD (voice activity detection) processor in
      * order to obtain VAD scores for individual PCM audio samples.
