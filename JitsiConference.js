@@ -1072,7 +1072,7 @@ JitsiConference.prototype._getInitialLocalTracks = function() {
  * Clear JitsiLocalTrack properties and listeners.
  * @param track the JitsiLocalTrack object.
  */
-JitsiConference.prototype.onLocalTrackRemoved = function(track) {
+JitsiConference.prototype.onLocalTrackRemoved = function(track, noTrackRemovedEvent) {
     track._setConference(null);
     this.rtc.removeLocalTrack(track);
     track.removeEventListener(JitsiTrackEvents.TRACK_MUTE_CHANGED,
@@ -1087,7 +1087,9 @@ JitsiConference.prototype.onLocalTrackRemoved = function(track) {
         this.statistics.sendScreenSharingEvent(false);
     }
 
-    this.eventEmitter.emit(JitsiConferenceEvents.TRACK_REMOVED, track);
+    if (!noTrackRemovedEvent) {
+      this.eventEmitter.emit(JitsiConferenceEvents.TRACK_REMOVED, track);
+    }
 };
 
 /**
@@ -1109,7 +1111,7 @@ JitsiConference.prototype.removeTrack = function(track) {
  * @param {JitsiLocalTrack} newTrack the new stream to use
  * @returns {Promise} resolves when the replacement is finished
  */
-JitsiConference.prototype.replaceTrack = function(oldTrack, newTrack) {
+JitsiConference.prototype.replaceTrack = function(oldTrack, newTrack, options = {}) {
     // First do the removal of the oldTrack at the JitsiConference level
     if (oldTrack) {
         if (oldTrack.disposed) {
@@ -1128,7 +1130,7 @@ JitsiConference.prototype.replaceTrack = function(oldTrack, newTrack) {
     return this._doReplaceTrack(oldTrack, newTrack)
         .then(() => {
             if (oldTrack) {
-                this.onLocalTrackRemoved(oldTrack);
+                this.onLocalTrackRemoved(oldTrack, options.noTrackRemovedEvent);
             }
 
             // Send 'VideoTypeMessage' on the bridge channel for the new track.
