@@ -435,7 +435,7 @@ export default _mergeNamespaceAndModule({
         [
             {
                 deviceId: null,
-                mediaType: type,
+                mediaType: MediaType.VIDEO,
                 sourceType: type,
                 stream: mediaStream,
                 track: mediaStream.getVideoTracks()[0],
@@ -451,7 +451,7 @@ export default _mergeNamespaceAndModule({
         [
             {
                 deviceId: null,
-                mediaType: "audio",
+                mediaType: MediaType.AUDIO,
                 sourceType: "audio",
                 stream: mediaStream,
                 track: mediaStream.getAudioTracks()[0],
